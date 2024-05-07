@@ -1,0 +1,4 @@
+{
+  "certPath": "/etc/letsencrypt/live/n4.genix.org/fullchain.pem",
+  "keyPath": "/etc/letsencrypt/live/n4.genix.org/privkey.pem"
+}
