@@ -46,14 +46,14 @@ function parseBool(s) {
   }
 }
 
-(function() {
+(function () {
   const validNetworks = ["bsc", "mumbai", "mumbai-solo"];
   const syncDelayThreshold = 15;
   const args = process.argv.slice(2);
-  if(args.length <= 0) {
+  if (args.length <= 0) {
     throw new Error("No startup arguments provided. Example startup: node cli.js bsc")
   }
-  if(!validNetworks.includes(args[0])) {
+  if (!validNetworks.includes(args[0])) {
     throw new Error(`${args[0]} network is not a valid network. Valid networks are: ${validNetworks.join(', ')}`)
   }
   const network = args[0];
@@ -86,7 +86,7 @@ function parseBool(s) {
     x.valGenixHash = await genix.getBlockHash(blockchainInfo.blocks - syncDelayThreshold);
     return smartContract.createSignedMessage(x);
   }
-  const validateTimedAndSignedMessage = async (x, walletAddress, discard=true) => {
+  const validateTimedAndSignedMessage = async (x, walletAddress, discard = true) => {
     if (!isObject(x.data)) {
       throw new Error('Data is non-object');
     }
@@ -99,7 +99,7 @@ function parseBool(s) {
     }
     return smartContract.validateSignedMessage(x, walletAddress, discard);
   }
-  const validateTimedAndSignedMessageOne = async (x, walletAddresses, discard=true) => {
+  const validateTimedAndSignedMessageOne = async (x, walletAddresses, discard = true) => {
     if (!isObject(x.data)) {
       throw new Error(`Data is non-object: ${JSON.stringify(x)}`);
     }
@@ -150,7 +150,7 @@ function parseBool(s) {
 
   function help() {
     console.log(
-`
+      `
 Available commands:
 
   ${chalk.bold('help')}: Prints this command.
@@ -175,25 +175,25 @@ Available commands:
   }
 
   async function startReconfigurationEvent() {
-    if(!networkSettings[network].supportReconfiguration) {
+    if (!networkSettings[network].supportReconfiguration) {
       throw new Error("Your node must support a re-configuration event (settings/public.json) to run this command.")
     }
 
     let payload = {
-      addresses: [], 
-      configNonce: networkSettings[network].configNonce, 
-      newAuthorityThreshold: networkSettings[network].newAuthorityThreshold, 
+      addresses: [],
+      configNonce: networkSettings[network].configNonce,
+      newAuthorityThreshold: networkSettings[network].newAuthorityThreshold,
       newMinBurnAmount: networkSettings[network].newMinBurnAmount
     };
     let approvals = 0;
     let required_approvals = networkSettings[network].authorityNodes.length;
 
-    for(const x of networkSettings[network].authorityNodes) {
+    for (const x of networkSettings[network].authorityNodes) {
       payload.addresses.push(x.newWalletAddress)
     }
 
     let results = [];
-    for(const x of networkSettings[network].authorityNodes) {
+    for (const x of networkSettings[network].authorityNodes) {
       try {
         process.stdout.write(`  ${getStyledAuthorityLink(x)} ${chalk.bold('->')} `);
         const result = await validateTimedAndSignedMessageOne(await post(`${getAuthorityLink(x)}/triggerReconfigurationEvent`, await createTimedAndSignedMessage(payload)), networkSettings[network].authorityNodes.map((x) => x.walletAddress))
@@ -209,14 +209,14 @@ Available commands:
           `    new authority addresses: ${result.newAuthorityAddresses}\n` +
           `    new authority threshold: ${result.newAuthorityThreshold}\n` +
           `    new min burn amount: ${result.newMinBurnAmount}\n`
-          );
+        );
         results.push(result);
-        if(
+        if (
           result["msg"] === "consensus pass" &&
           JSON.stringify(result.newAuthorityAddresses) === JSON.stringify(payload.addresses) &&
           result.newAuthorityThreshold === networkSettings[network].newAuthorityThreshold &&
           result.newMinBurnAmount === networkSettings[network].newMinBurnAmount
-          ) {
+        ) {
           approvals = approvals += 1;
         }
       } catch (error) {
@@ -225,7 +225,7 @@ Available commands:
         else { console.log(getStyledError(null, error.message)); }
       }
     }
-    if(approvals >= networkSettings[network].authorityThreshold) {
+    if (approvals >= networkSettings[network].authorityThreshold) {
       console.log("re-configure authorized.")
       console.log(
         chalk.bold(`Use the following details to call, with your wallet, the \`configure\` function of the smart contract (https://mumbai.polygonscan.com/address/${networkSettings[network].contractAddress}#writeContract).\n`) +
@@ -234,7 +234,7 @@ Available commands:
         `  new addresses: ${results.filter((x) => x !== undefined)[0].newAuthorityAddresses}\n` +
         `  signV: ${results.map((x) => x === undefined ? '0x0' : x.v.toString()).join(',')}\n` +
         `  signR: ${results.map((x) => x === undefined ? '0x0' : x.r.toString()).join(',')}\n` +
-        `  signS: ${results.map((x) => x === undefined ? '0x0' : x.s.toString()).join(',')}\n` 
+        `  signS: ${results.map((x) => x === undefined ? '0x0' : x.s.toString()).join(',')}\n`
       );
     } else {
       console.log(`consensus failed ${approvals}/${required_approvals}`)
@@ -467,8 +467,8 @@ Available commands:
       const node = networkSettings[network].authorityNodes[i];
       console.log(`  Requesting unspent from Node ${i} at ${node.hostname} (${node.walletAddress})...`);
       const { unspent: _unspent } = await validateTimedAndSignedMessage(
-          await post(`${getAuthorityLink(node)}/computeUnspent`, await createTimedAndSignedMessage({})),
-          node.walletAddress);
+        await post(`${getAuthorityLink(node)}/computeUnspent`, await createTimedAndSignedMessage({})),
+        node.walletAddress);
       for (const u of _unspent) {
         console.log(`      ${u.txid} -> ${u.amount}`);
       }
@@ -574,7 +574,7 @@ Available commands:
 
     // Shared configurations.
     const genixWidth = 20;
-    function consensusCell (cell, columnIndex, rowIndex, rowData) {
+    function consensusCell(cell, columnIndex, rowIndex, rowData) {
       if (rowData.length === 0) {
         return this.style('YES', 'bgGreen', 'black');
       }
@@ -591,15 +591,17 @@ Available commands:
       }
       return this.style('YES', 'bgGreen', 'black');
     }
-    const nodeHeader = { alias: "Node", width: 11, formatter: function (x) {
-      if (!x.startsWith('UNREACHABLE')) {
-        return this.style(x, "bgWhite", "black");
-      } else {
-        return this.style(x.replace('UNREACHABLE', ''), "bgRed", "black");
+    const nodeHeader = {
+      alias: "Node", width: 11, formatter: function (x) {
+        if (!x.startsWith('UNREACHABLE')) {
+          return this.style(x, "bgWhite", "black");
+        } else {
+          return this.style(x.replace('UNREACHABLE', ''), "bgRed", "black");
+        }
       }
-    }};
+    };
     function satoshiFormatter(x) {
-      if (x === null || x === undefined || typeof(x) !== 'string' || x === '') {
+      if (x === null || x === undefined || typeof (x) !== 'string' || x === '') {
         return '';
       } else {
         return genix.fromSatoshi(x);
@@ -634,10 +636,10 @@ Available commands:
       { alias: 'Repository' },
       { alias: 'Commit Hash' },
       { alias: 'Commit Timestamp' },
-      { alias: 'Clean', formatter: function (x) { return x === 'Yes' ? this.style('YES', 'bgGreen', 'black') :  this.style('NO', 'bgRed', 'black'); }  },
+      { alias: 'Clean', formatter: function (x) { return x === 'Yes' ? this.style('YES', 'bgGreen', 'black') : this.style('NO', 'bgRed', 'black'); } },
       { alias: 'Genix Version' },
       { alias: 'Height' },
-      { alias: 'Stats Time'}
+      { alias: 'Stats Time' }
     ];
     const versionFooter = ['Consensus']
       .concat(Array(3).fill(consensusCell))

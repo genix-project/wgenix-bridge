@@ -33,7 +33,7 @@ async function dump(path) {
 
 async function reset(path, sql) {
   try {
-    childProcess.execSync(`rm ${path}`, { stdio : 'ignore' });
+    childProcess.execSync(`rm ${path}`, { stdio: 'ignore' });
   } catch (err) {
   }
   const child = childProcess.spawn(`sqlite3`);
@@ -71,7 +71,7 @@ function registerMintDepositAddress(mintAddress, depositAddress, redeemScript) {
 }
 
 async function getMintDepositAddress(mintAddress) {
-  const results = await util.promisify(db.all.bind(db)) (
+  const results = await util.promisify(db.all.bind(db))(
     'SELECT depositAddress FROM mintDepositAddresses WHERE mintAddress=?',
     [mintAddress]
   );

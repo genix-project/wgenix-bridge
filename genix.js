@@ -39,14 +39,14 @@ module.exports = {
 };
 
 function toSatoshi(x) {
-  if (x === null || x === undefined || typeof(x) !== 'string' || x === '') {
+  if (x === null || x === undefined || typeof (x) !== 'string' || x === '') {
     throw new Error('Expected string input');
   }
   return (BigInt(Web3.utils.toWei(x, 'gwei')) / 10n).toString();
 }
 
 function fromSatoshi(x) {
-  if (x === null || x === undefined || typeof(x) !== 'string' || x === '') {
+  if (x === null || x === undefined || typeof (x) !== 'string' || x === '') {
     throw new Error('Expected string input');
   }
   return (Web3.utils.fromWei((BigInt(x) * 10n).toString(), 'gwei')).toString();
@@ -54,18 +54,18 @@ function fromSatoshi(x) {
 
 function getCookie() {
   const data = fs.readFileSync(GENIX_COOKIE_PATH, 'utf-8').split(':');
-  return {user: data[0], password: data[1]};
+  return { user: data[0], password: data[1] };
 }
 
 async function callRpc(method, params) {
   const cookie = getCookie();
   console.log(method)
   const options = {
-      url: "http://localhost:" + GENIX_PORT.toString(),
-      method: "post",
-      headers: { "content-type": "text/plain" },
-      auth: { user: cookie.user, pass: cookie.password },
-      body: JSON.stringify( {"jsonrpc": "1.0", "method": method, "params": params})
+    url: "http://localhost:" + GENIX_PORT.toString(),
+    method: "post",
+    headers: { "content-type": "text/plain" },
+    auth: { user: cookie.user, pass: cookie.password },
+    body: JSON.stringify({ "jsonrpc": "1.0", "method": method, "params": params })
   };
 
   return new Promise((resolve, reject) => {
@@ -134,7 +134,7 @@ async function listReceivedByAddress(confirmations) {
   const data = await callRpc('listreceivedbyaddress', [confirmations, false, true]);
   const dict = {};
   for (const entry of data) {
-    if(BLACKLIST.includes(entry.address)) {
+    if (BLACKLIST.includes(entry.address)) {
       continue;
     }
     dict[entry.address] = entry;
@@ -201,19 +201,19 @@ async function verifyRawTransaction(unspent, payouts, hex) {
   }
   const proposedVouts = sort(Object.keys(payouts)).asc().map((x) => [x, payouts[x]]);
   const txVouts = sort(tx.vout.slice()
-      .filter((x) => (x.scriptPubKey.type === 'scripthash' || x.scriptPubKey.type === 'pubkeyhash') && x.scriptPubKey.addresses.length === 1)
-      .map((x) => [x.scriptPubKey.addresses[0], x.value.toString()]))
-      .asc((x) => x[0]);
+    .filter((x) => (x.scriptPubKey.type === 'scripthash' || x.scriptPubKey.type === 'pubkeyhash') && x.scriptPubKey.addresses.length === 1)
+    .map((x) => [x.scriptPubKey.addresses[0], x.value.toString()]))
+    .asc((x) => x[0]);
 
   const proposedVoutsMap = new Map(proposedVouts);
   const txVoutsMap = new Map(txVouts);
   if (Object.keys(proposedVoutsMap).length !== Object.keys(txVoutsMap).length) {
     throw new Error('Payouts mistmatch in length');
   }
-  if (!txVouts.every((x) => proposedVoutsMap.has(x[0]) && toSatoshi(proposedVoutsMap.get(x[0])) ===  toSatoshi(x[1]))) {
+  if (!txVouts.every((x) => proposedVoutsMap.has(x[0]) && toSatoshi(proposedVoutsMap.get(x[0])) === toSatoshi(x[1]))) {
     throw new Error('Payouts mistmatch in content');
   }
-  if (!proposedVouts.every((x) => txVoutsMap.has(x[0]) && toSatoshi(txVoutsMap.get(x[0])) ===  toSatoshi(x[1]))) {
+  if (!proposedVouts.every((x) => txVoutsMap.has(x[0]) && toSatoshi(txVoutsMap.get(x[0])) === toSatoshi(x[1]))) {
     throw new Error('Payouts mistmatch in content');
   }
 }

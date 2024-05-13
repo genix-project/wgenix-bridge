@@ -6,10 +6,10 @@
   "bsc": {
     "provider": "https://bsc-dataseed.binance.org",
     "supportReconfiguration": false,
-    "configurationNonce": 1,
+    "configurationNonce": 0,
     "authorityThreshold": 2,
     "minBurnAmount": 1000000000,
-    "newAuthorityThreshold": 3,
+    "newAuthorityThreshold": 2,
     "newMinBurnAmount": 1000000000,
     "authorityNodes": [
       {
@@ -31,9 +31,9 @@
     "chainId": 56,
     "contractAddress": "0x0",
     "genixNetworkChangeAddress": "",
-    "changeConfirmations": 100,
-    "depositConfirmations": 120,
-    "payoutCoordinator": 4,
+    "changeConfirmations": 3000,
+    "depositConfirmations": 3060,
+    "payoutCoordinator": 0,
     "taxPayoutAddresses": [
       ""
     ]

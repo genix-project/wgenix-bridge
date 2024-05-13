@@ -1,6 +1,5 @@
 {
-  "contractAbi":
-  [
+  "contractAbi": [
     {
       "inputs": [],
       "stateMutability": "nonpayable",

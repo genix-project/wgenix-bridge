@@ -57,7 +57,7 @@ function validateSignedMessageStructure(message) {
   }
 }
 
-function validateSignedMessage(message, walletAddress, discard=true) {
+function validateSignedMessage(message, walletAddress, discard = true) {
   validateSignedMessageStructure(message);
   if (!verify(JSON.stringify(message.data), message.signature, walletAddress)) {
     throw new Error('Authority verification failed');
@@ -69,7 +69,7 @@ function validateSignedMessage(message, walletAddress, discard=true) {
   }
 }
 
-function validateSignedMessageOne(message, walletAddresses, discard=true) {
+function validateSignedMessageOne(message, walletAddresses, discard = true) {
   validateSignedMessageStructure(message);
   const verifications = walletAddresses.map(
     x => verify(JSON.stringify(message.data), message.signature, x) ? 1 : 0);

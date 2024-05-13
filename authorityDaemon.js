@@ -31,7 +31,7 @@ const PAYOUT_NETWORK_FEE_PER_TX = BigInt(genix.toSatoshi('1')); // Add this to n
 
 function debugHandler(log) {
   try {
-    const stream = fs.createWriteStream("debug.txt", {flags:'a'});
+    const stream = fs.createWriteStream("debug.txt", { flags: 'a' });
     stream.write(`>>>>> LOG START [${(new Date()).toUTCString()}] >>>>>\n`);
     stream.write(log.toString() + '\n');
     stream.write('<<<<<< LOG END <<<<<<\n');
@@ -68,7 +68,7 @@ function asyncHandler(fn) {
     try {
       return await fn(req, res);
     } catch (err) {
-      const stream = fs.createWriteStream("log.txt", {flags:'a'});
+      const stream = fs.createWriteStream("log.txt", { flags: 'a' });
       stream.write(`>>>>> ERROR START [${(new Date()).toUTCString()}] >>>>>\n`);
       stream.write(err.stack + '\n' + req.path + '\n' + JSON.stringify(req.body, null, 2) + '\n');
       stream.write('<<<<<< ERROR END <<<<<<\n');
@@ -87,10 +87,10 @@ function isObject(x) {
   const validNetworks = ["bsc", "mumbai", "mumbai-solo"];
   const syncDelayThreshold = 15;
   const args = process.argv.slice(2);
-  if(args.length <= 0) {
+  if (args.length <= 0) {
     throw new Error("No startup arguments provided. Example startup: node authorityDaemon.js bsc")
   }
-  if(!validNetworks.includes(args[0])) {
+  if (!validNetworks.includes(args[0])) {
     throw new Error(`${args[0]} network is not a valid network. Valid networks are: ${validNetworks.join(', ')}`)
   }
   const network = args[0];
@@ -144,7 +144,7 @@ function isObject(x) {
     x.valGenixHash = await genix.getBlockHash(blockchainInfo.blocks - syncDelayThreshold);
     return smartContract.createSignedMessage(x);
   }
-  const validateTimedAndSignedMessage = async (x, walletAddress, discard=true) => {
+  const validateTimedAndSignedMessage = async (x, walletAddress, discard = true) => {
     if (!isObject(x.data)) {
       throw new Error('Data is non-object');
     }
@@ -157,7 +157,7 @@ function isObject(x) {
     }
     return smartContract.validateSignedMessage(x, walletAddress, discard);
   }
-  const validateTimedAndSignedMessageOne = async (x, walletAddresses, discard=true) => {
+  const validateTimedAndSignedMessageOne = async (x, walletAddresses, discard = true) => {
     if (!isObject(x.data)) {
       throw new Error(`Data is non-object: ${JSON.stringify(x)}`);
     }
@@ -268,7 +268,7 @@ function isObject(x) {
     const unconfirmedAmountAfterTax = meetsTax(unconfirmedAmount) ? amountAfterTax(unconfirmedAmount) : 0n;
 
     // Retrieve minted amount.
-    const {mintNonce, mintedAmount} = await smartContract.getMintHistory(mintAddress, depositAddress);
+    const { mintNonce, mintedAmount } = await smartContract.getMintHistory(mintAddress, depositAddress);
 
     res.send(await createTimedAndSignedMessage({
       mintNonce: mintNonce.toString(),
@@ -298,7 +298,7 @@ function isObject(x) {
     const depositedAmountAfterTax = amountAfterTax(depositedAmount);
 
     // Retrieve minted amount.
-    const {mintNonce, mintedAmount} = await smartContract.getMintHistory(mintAddress, depositAddress);
+    const { mintNonce, mintedAmount } = await smartContract.getMintHistory(mintAddress, depositAddress);
 
     let mintAmount = BigInt(depositedAmountAfterTax) - BigInt(mintedAmount);
     if (mintAmount < 0n) {
@@ -368,16 +368,16 @@ function isObject(x) {
   }));
 
   app.post('/triggerReconfigurationEvent', createRateLimit(20, 1), asyncHandler(async (req, res) => {
-    if(!networkSettings[network].supportReconfiguration) {
+    if (!networkSettings[network].supportReconfiguration) {
       throw new Error("reconfiguration event does not have support from this node.")
     }
-    let ourNewAddresses = {addresses: []};
-    for(const x of networkSettings[network].authorityNodes) {
+    let ourNewAddresses = { addresses: [] };
+    for (const x of networkSettings[network].authorityNodes) {
       ourNewAddresses["addresses"].push(x.newWalletAddress)
     }
     const data = req.body
     await validateTimedAndSignedMessage(data, networkSettings[network].authorityNodes[networkSettings[network].payoutCoordinator].walletAddress);
-    let result = 
+    let result =
     {
       msg: "",
       configNonce: networkSettings[network].configurationNonce,
@@ -387,17 +387,17 @@ function isObject(x) {
     };
     const signature = smartContract.signConfigure(networkSettings[network].chainId, networkSettings[network].configurationNonce, ourNewAddresses.addresses, networkSettings[network].newAuthorityThreshold, networkSettings[network].newMinBurnAmount)
 
-    if(
+    if (
       JSON.stringify(ourNewAddresses["addresses"]) === JSON.stringify(data.data.addresses) &&
       data.data.newAuthorityThreshold === networkSettings[network].newAuthorityThreshold &&
       data.data.newMinBurnAmount === networkSettings[network].newMinBurnAmount
-      ) {
+    ) {
       result["msg"] = "consensus pass";
       result["v"] = signature.v;
       result["r"] = signature.r;
       result["s"] = signature.s;
     };
-    
+
     res.send(await createTimedAndSignedMessage(result));
   }))
 
@@ -518,7 +518,7 @@ function isObject(x) {
       for (const a of nonEmptyMintDepositAddresses) {
         const depositedAmount = genix.toSatoshi(deposited[a.depositAddress].amount.toString());
         if (meetsTax(depositedAmount)) {
-          debugHandler("deposited amount L520: "+ depositedAmount)
+          debugHandler("deposited amount L520: " + depositedAmount)
           const approvedTax = BigInt(a.approvedTax);
           const approvableTax = BigInt(taxAmount(depositedAmount));
           if (approvableTax > approvedTax) {
@@ -551,12 +551,14 @@ function isObject(x) {
             burnAddress: burnAddresses[i],
             burnIndex: burnIndexes[i],
             burnDestination: burnDestinations[i],
-            amount: amountAfterTax(burnAmounts[i]).toString() });
+            amount: amountAfterTax(burnAmounts[i]).toString()
+          });
           withdrawalTaxPayouts.push({
             burnAddress: burnAddresses[i],
             burnIndex: burnIndexes[i],
             burnDestination: burnDestinations[i],
-            amount: taxAmount(burnAmounts[i]).toString() });
+            amount: taxAmount(burnAmounts[i]).toString()
+          });
         }
       }
     }
