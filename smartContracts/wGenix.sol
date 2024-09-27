@@ -246,9 +246,9 @@ contract Genix is ERC20 {
         _chainId = 56;
 
         _authorityAddresses = [
-            0x0000000000000000000000000000000000000000,
-            0x0000000000000000000000000000000000000001,
-            0x0000000000000000000000000000000000000002
+            0x43f7FD52F02D5960cE85AB6fAf22Cfdd300D7457,
+            0xfA3ba79a0266Fd0354547E4807b19bC8Cef0696C,
+            0x3279f7B244F0194fd359D5AC29359ca676193aDb
         ];
         _authorityThreshold = 2;
         _configurationNonce = 0;
