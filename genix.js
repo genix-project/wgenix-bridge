@@ -11,7 +11,7 @@ const NETWORKS = JSON.parse(fs.readFileSync(`settings/networks.json`))
 const BLACKLIST = NETWORKS.blacklistedAddresses
 const TESTNET = NETWORKS.testnet
 const GENIX_COOKIE_PATH = TESTNET ? '~/.genixcore/testnet1/.cookie'.replace('~', os.homedir) : '~/.genixcore/.cookie'.replace('~', os.homedir);
-const GENIX_PORT = 43649;
+const GENIX_PORT = 9998;
 
 module.exports = {
   toSatoshi,
