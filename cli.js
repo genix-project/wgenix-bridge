@@ -114,8 +114,8 @@ function parseBool(s) {
   }
 
 
-  const repl = require('repl').start({ prompt: chalk.bold('wGenixcoin > '), eval: eval, writer: (x) => x, ignoreUndefined: true });
-  require('repl.history')(repl, '.cli_history');
+  const repl = require('repl').start({ prompt: chalk.bold('wGenix > '), eval: eval, writer: (x) => x, ignoreUndefined: true });
+  // require('repl.history')(repl, '.cli_history');
 
   const commandCallbacks = {
     help: help,
