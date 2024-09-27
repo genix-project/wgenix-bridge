@@ -13,24 +13,24 @@
     "newMinBurnAmount": 1000000000,
     "authorityNodes": [
       {
-        "hostname": "n0.genix.com",
+        "hostname": "n1.genix.cx",
         "walletAddress": "0x0",
         "newWalletAddress": "0x0"
       },
       {
-        "hostname": "n1.genix.com",
-        "walletAddress": "0x0",
+        "hostname": "n2.genix.cx",
+        "walletAddress": "0xfA3ba79a0266Fd0354547E4807b19bC8Cef0696C",
         "newWalletAddress": "0x0"
       },
       {
-        "hostname": "n2.genix.com",
-        "walletAddress": "0x0",
+        "hostname": "n3.genix.cx",
+        "walletAddress": "0x3279f7B244F0194fd359D5AC29359ca676193aDb",
         "newWalletAddress": "0x0"
       }
     ],
     "chainId": 56,
     "contractAddress": "0x0",
-    "genixNetworkChangeAddress": "",
+    "genixNetworkChangeAddress": "6apxn98daJURxQn2fxAbUmJ3FLXBvtz6vu",
     "changeConfirmations": 3000,
     "depositConfirmations": 3060,
     "payoutCoordinator": 0,

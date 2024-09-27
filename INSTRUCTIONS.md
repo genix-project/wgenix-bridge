@@ -16,7 +16,8 @@
 
 #### 3. Create your database to record payouts history.
 - Install `sqlite3`: `sudo apt install sqlite3`
-- Go to the `wgenix-bridge/settings/database` folder: `cd wgenix-bridge/settings/database`
+- Go to the `wgenix-bridge/database/` 
+- folder: `cd wgenix-bridge/database/`
 - Create the database file and enter sqlite3 console: `sqlite3 wGenix.db`
 - Run the initialization script: `.read schema_authority.sql`
 - Once done, you can simply exit the console via `Ctrl+X` or `Ctrl+D`.
@@ -28,13 +29,13 @@
     - `sudo ln -s /snap/bin/certbot /usr/bin/certbot`
 - Generate certs: `sudo certbot certonly --standalone --register-unsafely-without-email`
     - You may be asked to accept terms of service. Press Y to agree.
-    - You will be asked to enter the domain name for the certificate. Enter yours correspondingly based on your node index: `n0.genix.org`, `n1.genix.org`, `n3.genix.org`.
+    - You will be asked to enter the domain name for the certificate. Enter yours correspondingly based on your node index: `n0.genix.cx`, `n1.genix.cx`, `n3.genix.cx`.
     - This step may fail if port 80 and 443 is blocked. Please temporarily allow access to these ports.
 - Upon success, you will see a message saying something like:
     ```
     ...
-    Certificate is saved at: /etc/letsencrypt/live/n4.genix.org/fullchain.pem
-    Key is saved at:         /etc/letsencrypt/live/n4.genix.org/privkey.pem
+    Certificate is saved at: /etc/letsencrypt/live/n4.genix.cx/fullchain.pem
+    Key is saved at:         /etc/letsencrypt/live/n4.genix.cx/privkey.pem
     ...
     ```
     Note down these two paths (we will refer to them as CERTIFICATE_PATH and KEY_PATH respectively).
@@ -50,8 +51,8 @@
     - e.g. `ssl.json`:
         ```
         {
-          "certPath": "/etc/letsencrypt/live/n4.genix.org/fullchain.pem",
-          "keyPath": /etc/letsencrypt/live/n4.genix.org/privkey.pem"
+          "certPath": "/etc/letsencrypt/live/n4.genix.cx/fullchain.pem",
+          "keyPath": /etc/letsencrypt/live/n4.genix.cx/privkey.pem"
         }
         ```
 
