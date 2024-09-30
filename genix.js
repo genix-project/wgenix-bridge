@@ -131,7 +131,8 @@ async function importAddress(redeemScript) {
 }
 
 async function listReceivedByAddress(confirmations) {
-  const data = await callRpc('listreceivedbyaddress', [confirmations, false, true]);
+  const data = await callRpc('listreceivedbyaddress', [confirmations, true, false, true]);
+  console.log(data);
   const dict = {};
   for (const entry of data) {
     if (BLACKLIST.includes(entry.address)) {

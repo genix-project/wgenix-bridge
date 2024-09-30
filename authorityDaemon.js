@@ -25,9 +25,9 @@ function getAuthorityLink(x) {
 }
 
 const AMOUNT_THRESHOLD = BigInt(genix.toSatoshi("1"));
-const FLAT_FEE = BigInt(genix.toSatoshi('0'));
-const DUST_THRESHOLD = BigInt(genix.toSatoshi('1'));
-const PAYOUT_NETWORK_FEE_PER_TX = BigInt(genix.toSatoshi('1')); // Add this to network fee for each deposit / withdrawal.
+const FLAT_FEE = BigInt(genix.toSatoshi('0.01'));
+const DUST_THRESHOLD = BigInt(genix.toSatoshi('0.01'));
+const PAYOUT_NETWORK_FEE_PER_TX = BigInt(genix.toSatoshi('0.01')); // Add this to network fee for each deposit / withdrawal.
 
 function debugHandler(log) {
   try {
@@ -50,6 +50,7 @@ function meetsTax(x) {
 }
 
 function taxAmount(x) {
+  return 0;
   if (!meetsTax(x)) {
     throw new Error('Amount fails to meet tax');
   }
@@ -266,6 +267,10 @@ function isObject(x) {
     const depositedAmountAfterTax = meetsTax(depositedAmount) ? amountAfterTax(depositedAmount) : 0n;
     const unconfirmedAmount = genix.toSatoshi((await genix.getReceivedAmountByAddress(0, depositAddress)).toString()) - depositedAmount;
     const unconfirmedAmountAfterTax = meetsTax(unconfirmedAmount) ? amountAfterTax(unconfirmedAmount) : 0n;
+
+    console.log(unconfirmedAmount);
+    console.log(unconfirmedAmountAfterTax);
+
 
     // Retrieve minted amount.
     const { mintNonce, mintedAmount } = await smartContract.getMintHistory(mintAddress, depositAddress);
