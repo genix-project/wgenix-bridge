@@ -58,6 +58,7 @@ function taxAmount(x) {
 }
 
 function amountAfterTax(x) {
+  return x;
   if (!meetsTax(x)) {
     throw new Error('Amount fails to meet tax');
   }
